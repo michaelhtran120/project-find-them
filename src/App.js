@@ -17,10 +17,11 @@ const imagesDatabase = [
       {
         modPhoto: waldo,
         alt: "waldo",
-        // xmin: 1250,
-        // xmax: 1310,
-        // ymin: 660,
-        // ymax: 730,
+        xmin: 1200,
+        xmax: 1255,
+        ymin: 635,
+        ymax: 700,
+        isCorrect: false,
       },
     ],
   },
@@ -35,6 +36,7 @@ const imagesDatabase = [
         xmax: 226,
         ymin: 2991,
         ymax: 3023,
+        isCorrect: false,
       },
       {
         modPhoto: kumamon,
@@ -43,6 +45,7 @@ const imagesDatabase = [
         xmax: 935,
         ymin: 4140,
         ymax: 4210,
+        isCorrect: false,
       },
       {
         modPhoto: waldo,
@@ -51,6 +54,7 @@ const imagesDatabase = [
         xmax: 1200,
         ymin: 3690,
         ymax: 3750,
+        isCorrect: false,
       },
     ],
   },
@@ -58,14 +62,21 @@ const imagesDatabase = [
 
 function App() {
   const [coords, setCoords] = useState({ x: 0, y: 0 });
-  const [showSquare, setShowSquare] = useState(false);
-  const [image /*setImage*/] = useState(imagesDatabase[1]);
+  const [showChoice, setShowChoice] = useState(false);
+  const [image, setImage] = useState(imagesDatabase[1]);
   const [timer, setTimer] = useState(0);
-  const [gameStatus /*setGameStatus*/] = useState(true);
+  const [gameStatus, setGameStatus] = useState(true);
+  // const [answer, setAnswer] = useState(
+  //   image.answer.map((ans) => ans.isCorrect)
+  // );
 
-  useEffect(() => {
-    console.log(coords);
-  }, [coords]);
+  // useEffect(() => {
+  //   console.log(coords);
+  // }, [coords]);
+
+  // useEffect(() => {
+  //   console.log(answer);
+  // }, [answer]);
 
   useEffect(() => {
     let interval = null;
@@ -85,7 +96,7 @@ function App() {
   const onClick = (e) => {
     const clickCoords = { x: e.nativeEvent.offsetX, y: e.nativeEvent.offsetY };
     setCoords(clickCoords);
-    setShowSquare(!showSquare);
+    setShowChoice(!showChoice);
   };
 
   const checkAnswer = (e) => {
@@ -94,6 +105,7 @@ function App() {
     const character = image.answer.find(
       (ans) => ans.alt === e.currentTarget.alt
     );
+    console.log(character);
     if (
       coords.x > character.xmin &&
       coords.x < character.xmax &&
@@ -101,10 +113,26 @@ function App() {
       coords.y < character.ymax
     ) {
       console.log("correct");
+      const newAnswer = image.answer.map((ans) => {
+        if (ans.alt === character.alt) {
+          return { ...ans, isCorrect: true };
+        } else {
+          return ans;
+        }
+      });
+      setImage({ ...image, answer: newAnswer });
     } else {
       console.log("wrong");
     }
   };
+  useEffect(() => {
+    console.log(image);
+    const answers = image.answer.map((ans) => ans.isCorrect);
+    console.log(answers);
+    if (!answers.includes(false)) {
+      setGameStatus(false);
+    }
+  }, [image]);
 
   const squareStyle = {
     position: "absolute",
@@ -124,7 +152,7 @@ function App() {
     <div className='App'>
       <Nav answer={image.answer} timer={timer} />
       <img id='myImg' src={image.src} alt='collage' onClick={onClick} />
-      {showSquare ? (
+      {showChoice ? (
         <>
           <div className='square' style={squareStyle} />
           <div className='char-module' style={moduleStyle}>
@@ -135,7 +163,6 @@ function App() {
                 alt={ans.alt}
                 className='char'
                 onClick={checkAnswer}
-                data-value={ans.name}
               />
             ))}
           </div>

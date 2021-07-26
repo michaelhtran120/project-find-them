@@ -10,6 +10,67 @@ body {
   text-align: center;
 }
 
+.main {
+  opacity: 20%;
+}
+
+.module-window {
+  width: 500px;
+  position: absolute;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1000;
+  background-color: white;
+}
+.difficulty-btns {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 20px;
+}
+.difficulty-btns button {
+  width: 100px;
+  height: 50px;
+  margin-top: 20px;
+  box-shadow: 0 10px 20px -8px rgba(0, 0, 0, 0.7);
+  border: none;
+  transition: all 0.5s;
+}
+
+.difficulty-btns button:after {
+  opacity: 0;
+  transition: 0.5s;
+}
+
+.difficulty-btns button:hover {
+  padding-right: 24px;
+  padding-left: 8px;
+}
+
+.difficulty-btns button:hover:after {
+  opacity: 1;
+  right: 10px;
+}
+
+.easy-btn {
+  background: lightgreen;
+}
+.easy-btn:hover {
+  background: rgb(74, 240, 74);
+}
+.hard-btn {
+  background: rgb(245, 119, 119);
+}
+.hard-btn:hover {
+  background: rgb(250, 88, 88);
+}
+
+.hidden {
+  opacity: 0;
+  display: none;
+}
+
 #myImg {
   width: 1440px;
   margin-top: 100px;
@@ -65,4 +126,17 @@ body {
 
 .nav-timer {
   width: 150px;
+  font-size: 18px;
+}
+
+.gameover-module {
+  width: 500px;
+  height: 150px;
+  position: absolute;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1000;
+  background-color: white;
 }

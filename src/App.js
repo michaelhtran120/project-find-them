@@ -6,6 +6,9 @@ import ek from "./images/ek-photo.jpeg";
 import waldo from "./svg/waldo.svg";
 import brian from "./svg/brian.svg";
 import kumamon from "./svg/kumamon.svg";
+import waldox from "./svg/waldox.svg";
+import brianx from "./svg/brianx.svg";
+import kumamonx from "./svg/kumamonx.svg";
 
 import Nav from "./components/Nav.js";
 
@@ -16,6 +19,7 @@ const imagesDatabase = [
     answer: [
       {
         modPhoto: waldo,
+        foundPhoto: waldox,
         alt: "waldo",
         xmin: 1200,
         xmax: 1255,
@@ -24,13 +28,16 @@ const imagesDatabase = [
         isCorrect: false,
       },
     ],
+    score: {},
   },
   {
     name: "EgorK",
     src: ek,
+    score: [],
     answer: [
       {
         modPhoto: brian,
+        foundPhoto: brianx,
         alt: "brian",
         xmin: 187,
         xmax: 226,
@@ -40,6 +47,7 @@ const imagesDatabase = [
       },
       {
         modPhoto: kumamon,
+        foundPhoto: kumamonx,
         alt: "kumamon",
         xmin: 870,
         xmax: 935,
@@ -49,6 +57,7 @@ const imagesDatabase = [
       },
       {
         modPhoto: waldo,
+        foundPhoto: waldox,
         alt: "waldo",
         xmin: 1150,
         xmax: 1200,
@@ -65,19 +74,43 @@ function App() {
   const [showChoice, setShowChoice] = useState(false);
   const [image, setImage] = useState(imagesDatabase[1]);
   const [timer, setTimer] = useState(0);
-  const [gameStatus, setGameStatus] = useState(true);
-  // const [answer, setAnswer] = useState(
-  //   image.answer.map((ans) => ans.isCorrect)
-  // );
+  const [gameStatus, setGameStatus] = useState(false);
+  const [name, setName] = useState("");
+  const [disabledState, setDisabledState] = useState(true);
 
-  // useEffect(() => {
-  //   console.log(coords);
-  // }, [coords]);
+  // Get players name
+  const handleChange = (e) => {
+    setName(e.currentTarget.value);
+  };
+  // Enable diff btn if name entered or disabled when blank.
+  useEffect(() => {
+    if (name === "") {
+      setDisabledState(true);
+    } else {
+      setDisabledState(false);
+    }
+  }, [name]);
 
-  // useEffect(() => {
-  //   console.log(answer);
-  // }, [answer]);
+  const onClick = (e) => {
+    const clickCoords = { x: e.nativeEvent.offsetX, y: e.nativeEvent.offsetY };
+    setCoords(clickCoords);
+    setShowChoice(!showChoice);
+  };
 
+  const onEasyClick = () => {
+    setImage(imagesDatabase[0]);
+    document.querySelector(".module-window").classList.add("hidden");
+    document.querySelector(".main").style.opacity = "100%";
+    setGameStatus(true);
+  };
+
+  const onHardClick = () => {
+    setImage(imagesDatabase[1]);
+    document.querySelector(".module-window").classList.add("hidden");
+    document.querySelector(".main").style.opacity = "100%";
+    setGameStatus(true);
+  };
+  // Start timer once difficulty is chosen
   useEffect(() => {
     let interval = null;
 
@@ -93,42 +126,30 @@ function App() {
     };
   }, [gameStatus]);
 
-  const onClick = (e) => {
-    const clickCoords = { x: e.nativeEvent.offsetX, y: e.nativeEvent.offsetY };
-    setCoords(clickCoords);
-    setShowChoice(!showChoice);
-  };
-
   const checkAnswer = (e) => {
-    console.log("check answer");
-    console.log(e.currentTarget.alt);
     const character = image.answer.find(
       (ans) => ans.alt === e.currentTarget.alt
     );
-    console.log(character);
     if (
       coords.x > character.xmin &&
       coords.x < character.xmax &&
       coords.y > character.ymin &&
       coords.y < character.ymax
     ) {
-      console.log("correct");
       const newAnswer = image.answer.map((ans) => {
         if (ans.alt === character.alt) {
-          return { ...ans, isCorrect: true };
+          return { ...ans, isCorrect: true, modPhoto: ans.foundPhoto };
         } else {
           return ans;
         }
       });
       setImage({ ...image, answer: newAnswer });
     } else {
-      console.log("wrong");
     }
   };
+
   useEffect(() => {
-    console.log(image);
     const answers = image.answer.map((ans) => ans.isCorrect);
-    console.log(answers);
     if (!answers.includes(false)) {
       setGameStatus(false);
     }
@@ -150,40 +171,55 @@ function App() {
 
   return (
     <div className='App'>
-      <Nav answer={image.answer} timer={timer} />
-      <img id='myImg' src={image.src} alt='collage' onClick={onClick} />
-      {showChoice ? (
-        <>
-          <div className='square' style={squareStyle} />
-          <div className='char-module' style={moduleStyle}>
-            {image.answer.map((ans, i) => (
-              <img
-                key={i}
-                src={ans.modPhoto}
-                alt={ans.alt}
-                className='char'
-                onClick={checkAnswer}
-              />
-            ))}
-          </div>
-        </>
-      ) : null}
+      <div className='module-window'>
+        <p>Enter Name then choose a difficulty</p>
+        <form></form>
+        <input
+          type='text'
+          placeholder='enter name'
+          onChange={handleChange}
+          required
+        />
+        <div className='difficulty-btns'>
+          <button
+            className='easy-btn'
+            onClick={onEasyClick}
+            disabled={disabledState}
+          >
+            Easy
+          </button>
+          <button
+            className='hard-btn'
+            onClick={onHardClick}
+            disabled={disabledState}
+          >
+            Hard
+          </button>
+        </div>
+      </div>
+      <div className='main'>
+        <Nav answer={image.answer} timer={timer} />
+        <img id='myImg' src={image.src} alt='collage' onClick={onClick} />
+        {showChoice ? (
+          <>
+            <div className='square' style={squareStyle} />
+            <div className='char-module' style={moduleStyle}>
+              {image.answer.map((ans, i) => (
+                <img
+                  key={i}
+                  src={ans.modPhoto}
+                  alt={ans.alt}
+                  className='char'
+                  onClick={checkAnswer}
+                />
+              ))}
+            </div>
+          </>
+        ) : null}
+      </div>
+      <div className='gameover-module hidden'></div>
     </div>
   );
 }
 
 export default App;
-
-// useEffect(() => {
-//   console.log(coords);
-//   if (
-//     coords.x < 1310 &&
-//     coords.x > 1250 &&
-//     coords.y > 660 &&
-//     coords.y < 730
-//   ) {
-//     console.log("correct");
-//   } else {
-//     console.log("wrong");
-//   }
-// }, [coords]);

@@ -1,14 +1,9 @@
-// import firebase from "./firebase";
+import firebase from "./firebase";
 import React, { useState, useEffect } from "react";
 import "./App.css";
 import findWaldoPhoto from "./images/waldo.jpg";
-import ek from "./images/ek-photo.jpeg";
 import waldo from "./svg/waldo.svg";
-import brian from "./svg/brian.svg";
-import kumamon from "./svg/kumamon.svg";
 import waldox from "./svg/waldox.svg";
-import brianx from "./svg/brianx.svg";
-import kumamonx from "./svg/kumamonx.svg";
 
 import Nav from "./components/Nav.js";
 
@@ -21,58 +16,36 @@ const imagesDatabase = [
         modPhoto: waldo,
         foundPhoto: waldox,
         alt: "waldo",
-        xmin: 1200,
-        xmax: 1255,
-        ymin: 635,
-        ymax: 700,
-        isCorrect: false,
-      },
-    ],
-    score: {},
-  },
-  {
-    name: "EgorK",
-    src: ek,
-    score: [],
-    answer: [
-      {
-        modPhoto: brian,
-        foundPhoto: brianx,
-        alt: "brian",
-        xmin: 187,
-        xmax: 226,
-        ymin: 2991,
-        ymax: 3023,
-        isCorrect: false,
-      },
-      {
-        modPhoto: kumamon,
-        foundPhoto: kumamonx,
-        alt: "kumamon",
-        xmin: 870,
-        xmax: 935,
-        ymin: 4140,
-        ymax: 4210,
-        isCorrect: false,
-      },
-      {
-        modPhoto: waldo,
-        foundPhoto: waldox,
-        alt: "waldo",
-        xmin: 1150,
-        xmax: 1200,
-        ymin: 3690,
-        ymax: 3750,
         isCorrect: false,
       },
     ],
   },
 ];
 
+function useDatabase() {
+  const [database, setDatabase] = useState([]);
+
+  useEffect(() => {
+    firebase
+      .firestore()
+      .collection("database")
+      .get()
+      .then((snapshot) => {
+        const newDatabase = snapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        setDatabase(newDatabase);
+      });
+  }, []);
+  return database;
+}
+
 function App() {
+  const database = useDatabase();
   const [coords, setCoords] = useState({ x: 0, y: 0 });
   const [showChoice, setShowChoice] = useState(false);
-  const [image, setImage] = useState(imagesDatabase[1]);
+  const [image, setImage] = useState(imagesDatabase[0]);
   const [timer, setTimer] = useState(0);
   const [gameStatus, setGameStatus] = useState(false);
   const [name, setName] = useState("");
@@ -92,20 +65,23 @@ function App() {
   }, [name]);
 
   const onClick = (e) => {
-    const clickCoords = { x: e.nativeEvent.offsetX, y: e.nativeEvent.offsetY };
+    const clickCoords = {
+      x: e.nativeEvent.offsetX,
+      y: e.nativeEvent.offsetY,
+    };
     setCoords(clickCoords);
     setShowChoice(!showChoice);
   };
 
   const onEasyClick = () => {
-    setImage(imagesDatabase[0]);
+    setImage(database[1]);
     document.querySelector(".module-window").classList.add("hidden");
     document.querySelector(".main").style.opacity = "100%";
     setGameStatus(true);
   };
 
   const onHardClick = () => {
-    setImage(imagesDatabase[1]);
+    setImage(database[0]);
     document.querySelector(".module-window").classList.add("hidden");
     document.querySelector(".main").style.opacity = "100%";
     setGameStatus(true);
@@ -138,6 +114,8 @@ function App() {
     ) {
       const newAnswer = image.answer.map((ans) => {
         if (ans.alt === character.alt) {
+          alert("correct");
+          setShowChoice(false);
           return { ...ans, isCorrect: true, modPhoto: ans.foundPhoto };
         } else {
           return ans;
@@ -145,6 +123,8 @@ function App() {
       });
       setImage({ ...image, answer: newAnswer });
     } else {
+      alert("wrong");
+      setShowChoice(false);
     }
   };
 
@@ -152,8 +132,17 @@ function App() {
     const answers = image.answer.map((ans) => ans.isCorrect);
     if (!answers.includes(false)) {
       setGameStatus(false);
+      document.querySelector(".main").style.opacity = "50%";
+      document.querySelector(".gameover-module").classList.remove("hidden");
+      setShowChoice(false);
     }
   }, [image]);
+
+  const onRetryClick = () => {
+    document.querySelector(".module-window").classList.remove("hidden");
+    document.querySelector(".gameover-module").classList.add("hidden");
+    setTimer(0);
+  };
 
   const squareStyle = {
     position: "absolute",
@@ -217,9 +206,52 @@ function App() {
           </>
         ) : null}
       </div>
-      <div className='gameover-module hidden'></div>
+      <div className='gameover-module hidden'>
+        <h3>Game Over</h3>
+        <button className='retry-btn' onClick={onRetryClick}>
+          Retry?
+        </button>
+      </div>
     </div>
   );
 }
 
 export default App;
+
+// {
+//   name: "EgorK",
+//   src: ek,
+//   score: [],
+//   answer: [
+//     {
+//       modPhoto: brian,
+//       foundPhoto: brianx,
+//       alt: "brian",
+//       xmin: 187,
+//       xmax: 226,
+//       ymin: 2991,
+//       ymax: 3023,
+//       isCorrect: false,
+//     },
+//     {
+//       modPhoto: kumamon,
+//       foundPhoto: kumamonx,
+//       alt: "kumamon",
+//       xmin: 870,
+//       xmax: 935,
+//       ymin: 4140,
+//       ymax: 4210,
+//       isCorrect: false,
+//     },
+//     {
+//       modPhoto: waldo,
+//       foundPhoto: waldox,
+//       alt: "waldo",
+//       xmin: 1150,
+//       xmax: 1200,
+//       ymin: 3690,
+//       ymax: 3750,
+//       isCorrect: false,
+//     },
+//   ],
+// },

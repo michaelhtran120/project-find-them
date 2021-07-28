@@ -6,6 +6,8 @@ import waldo from "./svg/waldo.svg";
 import waldox from "./svg/waldox.svg";
 
 import Nav from "./components/Nav.js";
+import Credit from "./components/Credit.js";
+import Choice from "./components/Choice.js";
 
 const imagesDatabase = [
   {
@@ -19,24 +21,24 @@ const imagesDatabase = [
         isCorrect: false,
       },
     ],
+    score: [],
   },
 ];
-
 function useDatabase() {
   const [database, setDatabase] = useState([]);
 
   useEffect(() => {
-    firebase
+    const unsubscribe = firebase
       .firestore()
       .collection("database")
-      .get()
-      .then((snapshot) => {
+      .onSnapshot((snapshot) => {
         const newDatabase = snapshot.docs.map((doc) => ({
           id: doc.id,
           ...doc.data(),
         }));
         setDatabase(newDatabase);
       });
+    return () => unsubscribe();
   }, []);
   return database;
 }
@@ -46,6 +48,7 @@ function App() {
   const [coords, setCoords] = useState({ x: 0, y: 0 });
   const [showChoice, setShowChoice] = useState(false);
   const [image, setImage] = useState(imagesDatabase[0]);
+  const [score, setScore] = useState([]);
   const [timer, setTimer] = useState(0);
   const [gameStatus, setGameStatus] = useState(false);
   const [name, setName] = useState("");
@@ -86,6 +89,25 @@ function App() {
     document.querySelector(".main").style.opacity = "100%";
     setGameStatus(true);
   };
+
+  // Sorting score function from fastest to slowest
+  function compare(a, b) {
+    const timeA = a.time;
+    const timeB = b.time;
+
+    let comparison = 0;
+    if (timeA > timeB) {
+      comparison = 1;
+    } else if (timeA < timeB) {
+      comparison = -1;
+    }
+    return comparison;
+  }
+  useEffect(() => {
+    image.score.sort(compare);
+    setScore(image.score);
+  }, [image]);
+
   // Start timer once difficulty is chosen
   useEffect(() => {
     let interval = null;
@@ -102,6 +124,7 @@ function App() {
     };
   }, [gameStatus]);
 
+  // Check answer function
   const checkAnswer = (e) => {
     const character = image.answer.find(
       (ans) => ans.alt === e.currentTarget.alt
@@ -128,6 +151,7 @@ function App() {
     }
   };
 
+  //Game over check and adding player score to database.
   useEffect(() => {
     const answers = image.answer.map((ans) => ans.isCorrect);
     if (!answers.includes(false)) {
@@ -135,6 +159,11 @@ function App() {
       document.querySelector(".main").style.opacity = "50%";
       document.querySelector(".gameover-module").classList.remove("hidden");
       setShowChoice(false);
+      firebase
+        .firestore()
+        .collection("database")
+        .doc(image.id)
+        .update({ score: [...image.score, { name: name, time: timer }] });
     }
   }, [image]);
 
@@ -189,29 +218,37 @@ function App() {
       <div className='main'>
         <Nav answer={image.answer} timer={timer} />
         <img id='myImg' src={image.src} alt='collage' onClick={onClick} />
+        <Credit />
         {showChoice ? (
-          <>
-            <div className='square' style={squareStyle} />
-            <div className='char-module' style={moduleStyle}>
-              {image.answer.map((ans, i) => (
-                <img
-                  key={i}
-                  src={ans.modPhoto}
-                  alt={ans.alt}
-                  className='char'
-                  onClick={checkAnswer}
-                />
-              ))}
-            </div>
-          </>
+          <Choice coords={coords} onClick={checkAnswer} image={image} />
         ) : null}
       </div>
       <div className='gameover-module hidden'>
         <h3>Game Over</h3>
+        <p>
+          Your time: {timer} {timer === 1 ? "second" : "seconds"}
+        </p>
         <button className='retry-btn' onClick={onRetryClick}>
           Retry?
         </button>
+        <hr />
+        <h3>Scores</h3>
+        <div className='highscore'>
+          <table>
+            <tr>
+              <th>Name</th>
+              <th>Time</th>
+            </tr>
+            {score.map((score, i) => (
+              <tr key={i}>
+                <td>{score.name}</td>
+                <td>{score.time} (sec)</td>
+              </tr>
+            ))}
+          </table>
+        </div>
       </div>
+      {image.id === "616N6MdDqwwPtO3o16HD" ? <Credit /> : null}
     </div>
   );
 }
@@ -255,3 +292,22 @@ export default App;
 //     },
 //   ],
 // },
+
+// function useDatabase() {
+//   const [database, setDatabase] = useState([]);
+
+//   useEffect(() => {
+//     firebase
+//       .firestore()
+//       .collection("database")
+//       .get()
+//       .then((snapshot) => {
+//         const newDatabase = snapshot.docs.map((doc) => ({
+//           id: doc.id,
+//           ...doc.data(),
+//         }));
+//         setDatabase(newDatabase);
+//       });
+//   }, []);
+//   return database;
+// }

@@ -1,0 +1,23 @@
+{
+  "files": {
+    "main.css": "/project-find-them/static/css/main.1c546ed2.chunk.css",
+    "main.js": "/project-find-them/static/js/main.aff3eacf.chunk.js",
+    "main.js.map": "/project-find-them/static/js/main.aff3eacf.chunk.js.map",
+    "runtime-main.js": "/project-find-them/static/js/runtime-main.a3ba3174.js",
+    "runtime-main.js.map": "/project-find-them/static/js/runtime-main.a3ba3174.js.map",
+    "static/js/2.badb531a.chunk.js": "/project-find-them/static/js/2.badb531a.chunk.js",
+    "static/js/2.badb531a.chunk.js.map": "/project-find-them/static/js/2.badb531a.chunk.js.map",
+    "index.html": "/project-find-them/index.html",
+    "static/css/main.1c546ed2.chunk.css.map": "/project-find-them/static/css/main.1c546ed2.chunk.css.map",
+    "static/js/2.badb531a.chunk.js.LICENSE.txt": "/project-find-them/static/js/2.badb531a.chunk.js.LICENSE.txt",
+    "static/media/waldo.5cb8e9d4.jpg": "/project-find-them/static/media/waldo.5cb8e9d4.jpg",
+    "static/media/waldo.664d6578.svg": "/project-find-them/static/media/waldo.664d6578.svg",
+    "static/media/waldox.730456cf.svg": "/project-find-them/static/media/waldox.730456cf.svg"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.a3ba3174.js",
+    "static/js/2.badb531a.chunk.js",
+    "static/css/main.1c546ed2.chunk.css",
+    "static/js/main.aff3eacf.chunk.js"
+  ]
+}

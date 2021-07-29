@@ -1,8 +1,8 @@
 {
   "files": {
     "main.css": "/project-find-them/static/css/main.1c546ed2.chunk.css",
-    "main.js": "/project-find-them/static/js/main.aff3eacf.chunk.js",
-    "main.js.map": "/project-find-them/static/js/main.aff3eacf.chunk.js.map",
+    "main.js": "/project-find-them/static/js/main.2ecc193c.chunk.js",
+    "main.js.map": "/project-find-them/static/js/main.2ecc193c.chunk.js.map",
     "runtime-main.js": "/project-find-them/static/js/runtime-main.a3ba3174.js",
     "runtime-main.js.map": "/project-find-them/static/js/runtime-main.a3ba3174.js.map",
     "static/js/2.badb531a.chunk.js": "/project-find-them/static/js/2.badb531a.chunk.js",
@@ -10,6 +10,11 @@
     "index.html": "/project-find-them/index.html",
     "static/css/main.1c546ed2.chunk.css.map": "/project-find-them/static/css/main.1c546ed2.chunk.css.map",
     "static/js/2.badb531a.chunk.js.LICENSE.txt": "/project-find-them/static/js/2.badb531a.chunk.js.LICENSE.txt",
+    "static/media/brian.dd851ded.svg": "/project-find-them/static/media/brian.dd851ded.svg",
+    "static/media/brianx.c09b1914.svg": "/project-find-them/static/media/brianx.c09b1914.svg",
+    "static/media/ek-photo.ec5d474b.jpeg": "/project-find-them/static/media/ek-photo.ec5d474b.jpeg",
+    "static/media/kumamon.3c41973a.svg": "/project-find-them/static/media/kumamon.3c41973a.svg",
+    "static/media/kumamonx.b7661316.svg": "/project-find-them/static/media/kumamonx.b7661316.svg",
     "static/media/waldo.5cb8e9d4.jpg": "/project-find-them/static/media/waldo.5cb8e9d4.jpg",
     "static/media/waldo.664d6578.svg": "/project-find-them/static/media/waldo.664d6578.svg",
     "static/media/waldox.730456cf.svg": "/project-find-them/static/media/waldox.730456cf.svg"
@@ -18,6 +23,6 @@
     "static/js/runtime-main.a3ba3174.js",
     "static/js/2.badb531a.chunk.js",
     "static/css/main.1c546ed2.chunk.css",
-    "static/js/main.aff3eacf.chunk.js"
+    "static/js/main.2ecc193c.chunk.js"
   ]
 }

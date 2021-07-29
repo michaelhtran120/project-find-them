@@ -4,6 +4,11 @@ import "./App.css";
 import findWaldoPhoto from "./images/waldo.jpg";
 import waldo from "./svg/waldo.svg";
 import waldox from "./svg/waldox.svg";
+import ek from "./images/ek-photo.jpeg";
+import brian from "./svg/brian.svg";
+import brianx from "./svg/brianx.svg";
+import kumamon from "./svg/kumamon.svg";
+import kumamonx from "./svg/kumamonx.svg";
 
 import Main from "./components/Main.js";
 import DifficultyModule from "./components/DifficultyModule";

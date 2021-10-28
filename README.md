@@ -2,6 +2,7 @@
 
 Using React and Firebase as the backend, I created a "Find Waldo" application.
 
+[Live Demo](https://michaelhtran120.github.io/project-find-them/)
 
 ## Goal
 
